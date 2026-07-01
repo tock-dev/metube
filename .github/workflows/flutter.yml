@@ -1,0 +1,74 @@
+name: Flutter Auto-compilation
+
+on:
+  push:
+    tags:
+      - v*
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    env:
+      JAVA_OPTS: '-Xmx4g' # Give Java 4GB of RAM
+      GRADLE_OPTS: '-Dorg.gradle.jvmargs=-Xmx4g'
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            flutter_os: linux
+            archive_path: build/linux/x64/release/bundle/
+            artifact_name: release.zip
+            asset_name: flowser-linux.zip
+          - os: ubuntu-latest
+            flutter_os: apk
+            archive_path: 0
+            artifact_name: build/app/outputs/flutter-apk/app-release.apk
+            asset_name: flowser-android.apk
+          - os: windows-latest
+            flutter_os: windows
+            archive_path: build/windows/x64/runner/Release/
+            artifact_name: release.zip
+            asset_name: flowser-windows.zip
+          # - os: macos-latest
+          #   flutter_os: macos
+          #   archive_path: build/macos/Build/Products/Release/
+          #   artifact_name: release.app
+          #   asset_name: flowser-macos
+          # - os: macos-latest
+          #   flutter_os: ios
+          #   archive_path: build/ios/ipa/
+          #   artifact_name: release.zip
+          #   asset_name: flowser-ios
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+      - name: Setup flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+      - name: Linux dependencies
+        if: matrix.flutter_os == 'linux'
+        run: |
+          sudo apt update -y
+          sudo apt install -y ninja-build libgtk-3-dev
+      - name: Build
+        run: |
+          flutter pub get
+          flutter build ${{ matrix.flutter_os }}
+      - name: List files (Debug)
+        run: ls -R build/
+      - name: Archive
+        if: matrix.archive_path != 0
+        uses: thedoctor0/zip-release@0.7.5
+        with:
+          path: ${{ matrix.archive_path }}
+      - name: Upload
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: ${{ matrix.artifact_name }}
+          asset_name: ${{ matrix.asset_name }}
+          tag: ${{ github.ref }}
