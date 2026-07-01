@@ -119,7 +119,7 @@ class _ApplicationState extends State<Application> {
   </specVersion>
   <device>
     <deviceType>urn:schemas-upnp-org:device:dialreceiver:1</deviceType>
-    <friendlyName>MeTube Receiver</friendlyName>
+    <friendlyName>MeTube</friendlyName>
     <manufacturer>CandyQAZ Dev</manufacturer>
     <modelName>MeTube Receiver</modelName>
     <UDN>uuid:fb2772a0-4b2e-11e2-bcfd-0800200c9a66</UDN>
