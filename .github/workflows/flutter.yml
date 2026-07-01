@@ -20,27 +20,27 @@ jobs:
             flutter_os: linux
             archive_path: build/linux/x64/release/bundle/
             artifact_name: release.zip
-            asset_name: flowser-linux.zip
+            asset_name: metube-linux.zip
           - os: ubuntu-latest
             flutter_os: apk
             archive_path: 0
             artifact_name: build/app/outputs/flutter-apk/app-release.apk
-            asset_name: flowser-android.apk
+            asset_name: metube-android.apk
           - os: windows-latest
             flutter_os: windows
             archive_path: build/windows/x64/runner/Release/
             artifact_name: release.zip
-            asset_name: flowser-windows.zip
+            asset_name: metube-windows.zip
           # - os: macos-latest
           #   flutter_os: macos
           #   archive_path: build/macos/Build/Products/Release/
           #   artifact_name: release.app
-          #   asset_name: flowser-macos
+          #   asset_name: metube-macos
           # - os: macos-latest
           #   flutter_os: ios
           #   archive_path: build/ios/ipa/
           #   artifact_name: release.zip
-          #   asset_name: flowser-ios
+          #   asset_name: metube-ios
     runs-on: ${{ matrix.os }}
     steps:
       - name: Clone repository
