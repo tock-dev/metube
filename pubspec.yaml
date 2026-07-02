@@ -32,9 +32,9 @@ dependencies:
   device_info_plus: ^13.2.0
   flutter:
     sdk: flutter
-  webview_flutter: null
-  webview_flutter_android: ^3.16.0
-  webview_flutter_wkwebview: ^3.13.0
+  webview_all:
+  webview_flutter_android:
+  webview_flutter_wkwebview:
   window_manager: ^0.5.1
 
 dev_dependencies:
