@@ -72,10 +72,10 @@ jobs:
       - name: Archive - Windows
         if: matrix.flutter_os == 'windows'
         run: |
-          set original_path=%CD%
-          cd ${{ matrix.archive_path }}
-          tar -a -c -f %original_path%/${{ matrix.artifact_name }} .
-          cd %original_path%
+          set "ORIGINAL_PATH=%CD%"
+          cd /d "${{ matrix.archive_path }}"
+          tar -a -c -f "%ORIGINAL_PATH%/${{ matrix.artifact_name }}" *
+          cd /d "%ORIGINAL_PATH%"
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
