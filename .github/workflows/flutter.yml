@@ -28,7 +28,7 @@ jobs:
             asset_name: metube-android-${{ github.ref_name }}.apk
           - os: windows-latest
             flutter_os: windows
-            archive_path: build/windows/x64/runner/Release/
+            archive_path: build\windows\x64\runner\Release
             artifact_name: release.zip
             asset_name: metube-windows-${{ github.ref_name }}.zip
           # - os: macos-latest
@@ -73,6 +73,7 @@ jobs:
           cd $original_path
       - name: Archive - Windows
         if: matrix.flutter_os == 'windows'
+        shell: cmd
         run: |
           set "ORIGINAL_PATH=%CD%"
           cd /d "${{ matrix.archive_path }}"
