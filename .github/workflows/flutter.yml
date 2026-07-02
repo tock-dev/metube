@@ -51,6 +51,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
+          pub-cache: true
       - name: Linux dependencies
         if: matrix.flutter_os == 'linux'
         run: |
