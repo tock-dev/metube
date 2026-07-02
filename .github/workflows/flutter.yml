@@ -19,8 +19,8 @@ jobs:
           - os: ubuntu-latest
             flutter_os: linux
             archive_path: build/linux/x64/release/bundle/
-            artifact_name: release.zip
-            asset_name: metube-linux-${{ github.ref_name }}.zip
+            artifact_name: release.tar.gz
+            asset_name: metube-linux-${{ github.ref_name }}.tar.gz
           - os: ubuntu-latest
             flutter_os: apk
             archive_path: -1
@@ -62,13 +62,20 @@ jobs:
           flutter build ${{ matrix.flutter_os }}
       - name: List files (Debug)
         run: ls -R build/
-      - name: Archive
-        if: matrix.archive_path != -1
+      - name: Archive - Linux
+        if: matrix.flutter_os == 'linux'
         run: |
           original_path=$(pwd)
           cd ${{ matrix.archive_path }}
           tar cvzf $original_path/${{ matrix.artifact_name }} .
           cd $original_path
+      - name: Archive - Windows
+        if: matrix.flutter_os == 'windows'
+        run: |
+          set original_path=%CD%
+          cd ${{ matrix.archive_path }}
+          zip -r %original_path%/${{ matrix.artifact_name }} .
+          cd %original_path%
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
