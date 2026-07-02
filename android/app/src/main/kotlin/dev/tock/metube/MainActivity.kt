@@ -1,4 +1,4 @@
-package com.example.metube
+package dev.tock.metube
 
 import io.flutter.embedding.android.FlutterActivity
 
