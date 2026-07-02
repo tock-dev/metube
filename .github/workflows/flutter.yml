@@ -74,7 +74,7 @@ jobs:
         run: |
           set original_path=%CD%
           cd ${{ matrix.archive_path }}
-          zip -r %original_path%/${{ matrix.artifact_name }} .
+          tar -a -c -f %original_path%/${{ matrix.artifact_name }} .
           cd %original_path%
       - name: Upload
         uses: svenstaro/upload-release-action@v2
