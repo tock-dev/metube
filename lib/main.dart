@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -38,7 +39,7 @@ Future<void> main() async {
 }
 
 class Application extends StatefulWidget {
-  Application({super.key});
+  const Application({super.key});
 
   @override
   State<Application> createState() => _ApplicationState();
@@ -49,6 +50,7 @@ class _ApplicationState extends State<Application> {
   RawDatagramSocket? _udpSocket;
   HttpServer? _httpServer;
   String _localIp = '127.0.0.1';
+  String deviceName = 'MeTube';
 
   @override
   void initState() {
@@ -82,6 +84,27 @@ class _ApplicationState extends State<Application> {
   }
 
   void _bootDIALEngine() async {
+    if (deviceName == 'MeTube') {
+      var dip = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        var deviceInfo = await dip.androidInfo;
+        deviceName =
+            '${deviceInfo.name} / ${deviceInfo.manufacturer} ${deviceInfo.model}';
+      } else if (Platform.isIOS) {
+        var deviceInfo = await dip.iosInfo;
+        deviceName = '${deviceInfo.name} / ${deviceInfo.modelName}';
+      } else if (Platform.isLinux) {
+        var deviceInfo = await dip.linuxInfo;
+        deviceName = '${deviceInfo.prettyName} / ${deviceInfo.id}';
+      } else if (Platform.isMacOS) {
+        var deviceInfo = await dip.macOsInfo;
+        deviceName = '${deviceInfo.computerName} / ${deviceInfo.modelName}';
+      } else if (Platform.isWindows) {
+        var deviceInfo = await dip.windowsInfo;
+        deviceName =
+            '${deviceInfo.userName}\'s ${deviceInfo.computerName} / ${deviceInfo.productName}';
+      }
+    }
     try {
       _localIp = await _getLocalIpAddress();
 
@@ -123,7 +146,8 @@ class _ApplicationState extends State<Application> {
         );
 
         // Fully compliant UPnP schema required by the YouTube client
-        String xml = '''<?xml version="1.0" encoding="utf-8"?>
+        String xml =
+            '''<?xml version="1.0" encoding="utf-8"?>
 <root xmlns="urn:schemas-upnp-org:device-1-0" xmlns:dial="urn:dial-multiscreen-org:schemas:dial">
   <specVersion>
     <major>1</major>
@@ -131,8 +155,8 @@ class _ApplicationState extends State<Application> {
   </specVersion>
   <device>
     <deviceType>urn:schemas-upnp-org:device:dialreceiver:1</deviceType>
-    <friendlyName>MeTube</friendlyName>
-    <manufacturer>CandyQAZ Dev</manufacturer>
+    <friendlyName>$deviceName</friendlyName>
+    <manufacturer>tockdev</manufacturer>
     <modelName>MeTube Receiver</modelName>
     <UDN>uuid:fb2772a0-4b2e-11e2-bcfd-0800200c9a66</UDN>
     <serviceList>
