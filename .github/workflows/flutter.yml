@@ -20,17 +20,17 @@ jobs:
             flutter_os: linux
             archive_path: build/linux/x64/release/bundle/
             artifact_name: release.zip
-            asset_name: metube-linux.zip
+            asset_name: metube-linux-${{ github.ref_name }}.zip
           - os: ubuntu-latest
             flutter_os: apk
-            archive_path: 0
+            archive_path: -1
             artifact_name: build/app/outputs/flutter-apk/app-release.apk
-            asset_name: metube-android.apk
+            asset_name: metube-android-${{ github.ref_name }}.apk
           - os: windows-latest
             flutter_os: windows
             archive_path: build/windows/x64/runner/Release/
             artifact_name: release.zip
-            asset_name: metube-windows.zip
+            asset_name: metube-windows-${{ github.ref_name }}.zip
           # - os: macos-latest
           #   flutter_os: macos
           #   archive_path: build/macos/Build/Products/Release/
@@ -63,10 +63,12 @@ jobs:
       - name: List files (Debug)
         run: ls -R build/
       - name: Archive
-        if: matrix.archive_path != 0
-        uses: thedoctor0/zip-release@0.7.5
-        with:
-          path: ${{ matrix.archive_path }}
+        if: matrix.archive_path != -1
+        run: |
+          original_path=$(pwd)
+          cd ${{ matrix.archive_path }}
+          tar cvzf $original_path/${{ matrix.artifact_name }} .
+          cd $original_path
       - name: Upload
         uses: svenstaro/upload-release-action@v2
         with:
